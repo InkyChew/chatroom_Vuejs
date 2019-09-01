@@ -7,7 +7,7 @@
         img.mt-auto(src='@/assets/images/logo-rapid-chat.svg')
       .col
         .chatBox
-          .msgBox
+          .msgBox(ref='msgBox')
             .friendMsg This is some text within a card body.
             //-
             .d-flex.align-items-end.flex-column
@@ -15,6 +15,8 @@
                 .selfMsg(:class='{ img : selfMsg.type === "sticker" }')
                   template(v-if='selfMsg.type === "text"')
                     | {{ selfMsg.content }}
+                  template(v-else-if='selfMsg.type === "picture"')
+                    img(:src='selfMsg.content')
                   template(v-else-if='selfMsg.type === "sticker"')
                     img(:src='selfMsg.content')
           .controlBox.row.mx-0.d-flex.justify-content-between
@@ -28,6 +30,8 @@
               label.uploadImage
                 input(
                   type='file'
+                  accept='image/jpg, image/png, image/jpeg'
+                  @change='uploadImage'
                 )
               i.fas.fa-image
               //-
@@ -67,6 +71,7 @@ export default {
   data () {
     return {
       message: '',
+      picture: '',
       selfMsgs: [
         {
           type: 'text',
@@ -74,6 +79,16 @@ export default {
         }
       ],
       selfStickers: []
+    }
+  },
+  watch: {
+    selfMsgs: {
+      handler (val) {
+        this.$nextTick(() => {
+          this.scrollToBottom()
+        })
+      },
+      deep: true
     }
   },
   methods: {
@@ -90,7 +105,23 @@ export default {
         content: e
       }
       this.selfMsgs.push(sticker)
-      console.log(e)
+    },
+    uploadImage (e) {
+      const image = {
+        type: 'picture',
+        content: e
+      }
+      this.selfMsgs.push(image)
+      console.log(e.target.value)
+    },
+    scrollToBottom () {
+      const box = this.$refs.msgBox
+      var boxHeight = box.scrollHeight
+      this.$nextTick(() => {
+        box.scrollTop = boxHeight
+      })
+      console.log(this.$refs.msgBox.scrollHeight)
+      console.log('top:' + this.$refs.msgBox.scrollTop)
     }
   }
 }

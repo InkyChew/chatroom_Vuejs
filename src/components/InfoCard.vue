@@ -44,7 +44,7 @@
           .save.mx-auto
             a.btn.btn-light(
               href='.more'
-              @click='nextStep'
+              @click=''
               data-toggle="collapse"
             ) SAVE
 </template>

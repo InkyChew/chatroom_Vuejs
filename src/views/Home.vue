@@ -13,6 +13,7 @@
 import IndexCard from '@/components/IndexCard'
 import InfoCard from '@/components/InfoCard'
 import { mapGetters } from 'vuex'
+import { setTimeout } from 'timers'
 
 export default {
   name: 'home',
@@ -24,12 +25,25 @@ export default {
     return {
     }
   },
+  watch: {
+    getStep: {
+      handler (val) {
+        if (val === 'searchStep') {
+          setTimeout(this.gotoChatRoom, 3000)
+        }
+      },
+      deep: true
+    }
+  },
   computed: {
     ...mapGetters({
       getStep: 'getStep'
     })
   },
   methods: {
+    gotoChatRoom () {
+      this.$router.push({ path: '/about' })
+    }
   }
 }
 </script>
